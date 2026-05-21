@@ -791,6 +791,52 @@
   opacity: 0.8;
 }
 
+.contactBlock {
+  display: grid;
+  gap: 6px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+
+.contactLabel {
+  display: block;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
+.contactDetails {
+  display: grid;
+  gap: 2px;
+  font-size: 0.79rem;
+  color: var(--muted);
+}
+
+.contactDetails strong {
+  color: var(--text);
+  font-size: 0.84rem;
+}
+
+.contactLink {
+  width: fit-content;
+  margin-top: 4px;
+  padding: 6px 10px;
+  border: 1px solid var(--border-accent);
+  border-radius: 999px;
+  color: var(--accent-strong);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.contactNeeded {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
 .snippet {
   margin: 0;
   font-size: 0.81rem;

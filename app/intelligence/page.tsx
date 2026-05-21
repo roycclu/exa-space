@@ -18,6 +18,11 @@ type IntelligenceResult = {
   highlights: string[];
   snippet: string;
   score: number | null;
+  contact: {
+    name: string;
+    title: string;
+    url: string | null;
+  } | null;
 };
 
 type TabState = {
@@ -33,11 +38,7 @@ type TabState = {
 const INTELLIGENCE_SYSTEM_PROMPT =
   "You are a space procurement intelligence analyst. Given a search result and a seller's capability description, write one sentence explaining why this result is a relevant procurement opportunity. Be specific. Under 25 words.";
 const JUDGE_INCLUDE_DOMAINS = [
-  "spacenews.com",
-  "nasa.gov",
-  "esa.int",
-  "spacex.com",
-  "rocketlabusa.com"
+  "open web"
 ];
 const COUNSEL_INCLUDE_DOMAINS = [
   "spacenews.com",
@@ -53,12 +54,12 @@ const TAB_CONFIG = {
     label: "Buyers",
     description: "Potential buying organizations",
     buildQuery: (judgeName: string) =>
-      `"${judgeName}" satellite program procurement buyer space company`,
+      `${judgeName} space procurement buyer program lead sourcing`,
     previewParams: {
-      type: "neural",
-      numResults: 8,
+      type: "auto",
+      category: "company",
+      numResults: 10,
       highlights: true,
-      includeDomains: JUDGE_INCLUDE_DOMAINS,
       systemPrompt: INTELLIGENCE_SYSTEM_PROMPT
     },
     westlawNote:
@@ -563,6 +564,31 @@ export default function IntelligencePage() {
                               : result.snippet}
                           </p>
                         ) : null}
+                        {activeTab === "judge" && (
+                          <div className={styles.contactBlock}>
+                            <span className={styles.contactLabel}>Contact</span>
+                            {result.contact ? (
+                              <div className={styles.contactDetails}>
+                                <strong>{result.contact.name}</strong>
+                                <span>{result.contact.title}</span>
+                                {result.contact.url ? (
+                                  <a
+                                    href={result.contact.url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className={styles.contactLink}
+                                  >
+                                    {result.contact.url.includes("linkedin.com")
+                                      ? "LinkedIn"
+                                      : "Profile"}
+                                  </a>
+                                ) : null}
+                              </div>
+                            ) : (
+                              <div className={styles.contactNeeded}>Research needed</div>
+                            )}
+                          </div>
+                        )}
                       </article>
                     ))
                   )}
