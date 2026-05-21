@@ -35,26 +35,26 @@ type ResultSection = {
 };
 
 const DOMAIN_PRESETS: DomainPreset[] = [
-  { id: "cornell", label: "Cornell LII", domain: "law.cornell.edu" },
-  { id: "justice", label: "U.S. DOJ", domain: "justice.gov" },
-  { id: "supreme", label: "Supreme Court", domain: "supremecourt.gov" },
-  { id: "sec", label: "SEC", domain: "sec.gov" },
-  { id: "reuters", label: "Reuters Legal", domain: "reuters.com" },
-  { id: "lexology", label: "Lexology", domain: "lexology.com" }
+  { id: "nasa", label: "NASA", domain: "nasa.gov" },
+  { id: "esa", label: "ESA", domain: "esa.int" },
+  { id: "spacenews", label: "SpaceNews", domain: "spacenews.com" },
+  { id: "rocketlab", label: "Rocket Lab", domain: "rocketlabusa.com" },
+  { id: "spacex", label: "SpaceX", domain: "spacex.com" },
+  { id: "defensenews", label: "Defense News", domain: "defensenews.com" }
 ];
 
 const CATEGORY_META: Record<ResearchCategory, { label: string; description: string }> = {
   precedent: {
-    label: "Precedent",
-    description: "Cases, statutes, and legal analysis"
+    label: "Buyers",
+    description: "Companies and primes likely to purchase the capability"
   },
   opposingCounsel: {
-    label: "Opposing counsel",
-    description: "Firms, prior matters, and litigation posture"
+    label: "Programs",
+    description: "Program announcements, launches, and mission procurement signals"
   },
   industryNews: {
-    label: "Industry news",
-    description: "Company and market developments"
+    label: "Signals",
+    description: "Hiring, partnerships, funding, and announcement activity"
   }
 };
 
@@ -139,13 +139,13 @@ function prettyJson(value: unknown) {
 export default function HomePage() {
   const [searchMode, setSearchMode] = useState<SearchMode>("manual");
   const [manualQuery, setManualQuery] = useState(
-    "Delaware corporate veil piercing precedent in SaaS acquisition disputes"
+    "radiation-hardened microprocessors for small satellites"
   );
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [selectedPresetIds, setSelectedPresetIds] = useState<string[]>([
-    "cornell",
-    "justice",
-    "supreme"
+    "nasa",
+    "esa",
+    "spacenews"
   ]);
   const [customDomains, setCustomDomains] = useState("");
   const [showSearchParams, setShowSearchParams] = useState(false);
@@ -174,7 +174,7 @@ export default function HomePage() {
         {
           category: "precedent",
           heading: "Search results",
-          description: "Query-driven legal research",
+          description: "Query-driven buyer and program search",
           searchQuery: resultState.query,
           exaRequest: resultState.requests.exa,
           results: {
@@ -273,7 +273,7 @@ export default function HomePage() {
     event.preventDefault();
 
     if (!uploadFile) {
-      setError("Drop a contract, case summary, or brief before running document research.");
+      setError("Drop a capability brief, datasheet, or market note before running document research.");
       return;
     }
 
@@ -338,25 +338,21 @@ export default function HomePage() {
       <header className={styles.siteHeader}>
         <div className={styles.headerInner}>
           <div className={styles.brandRow}>
-            <span className={styles.brandName}>Harvey</span>
+            <span className={styles.brandName}>SpaceMatch</span>
             <span className={styles.brandSep}>|</span>
-            <span className={styles.brandProduct}>Neural Search</span>
+            <span className={styles.brandProduct}>Space Procurement Intelligence</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            <Link href="/icp" className={styles.headerLink}>
+              ICP Research
+            </Link>
             <Link
               href="/intelligence"
-              style={{
-                fontSize: "0.7rem",
-                fontWeight: 600,
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: "var(--muted)",
-                textDecoration: "none"
-              }}
+              className={styles.headerLink}
             >
-              Legal Intelligence →
+              Procurement Intelligence →
             </Link>
-            <span className={styles.poweredBy}>Live web research</span>
+            <span className={styles.poweredBy}>Find buyers and programs for your space hardware</span>
           </div>
         </div>
         <div className={styles.goldRule} />
@@ -391,27 +387,27 @@ export default function HomePage() {
               {searchMode === "manual" ? (
                 <form className={styles.searchForm} onSubmit={handleManualSearch}>
                   <div className={styles.sectionHeader}>
-                    <h2>Describe the legal issue</h2>
+                    <h2>What do you sell?</h2>
                   </div>
                   <textarea
                     className={styles.queryInput}
                     value={manualQuery}
                     onChange={(event) => setManualQuery(event.target.value)}
-                    placeholder="Enter a legal question, dispute context, or research objective."
+                    placeholder="e.g. radiation-hardened microprocessors for small satellites"
                   />
                   <div className={styles.actionRow}>
                     <button className={styles.primaryButton} type="submit" disabled={isPending}>
                       {manualPending ? "Searching..." : "Run search"}
                     </button>
                     <div className={styles.microcopy}>
-                      Neural and Google search run side by side against the same legal query.
+                      Neural and Google search run side by side against the same capability query.
                     </div>
                   </div>
                 </form>
               ) : (
                 <form className={styles.searchForm} onSubmit={handleDocumentSearch}>
                   <div className={styles.sectionHeader}>
-                    <h2>Upload matter documents</h2>
+                    <h2>Upload capability documents</h2>
                   </div>
                   <div
                     className={`${styles.dropzone} ${isDraggingFile ? styles.dropzoneActive : ""}`}
@@ -429,7 +425,7 @@ export default function HomePage() {
                     }}
                   >
                     <div className={styles.dropzoneTitle}>
-                      {uploadFile ? uploadFile.name : "Drag and drop a contract, memo, or case summary"}
+                      {uploadFile ? uploadFile.name : "Drag and drop a capability brief, datasheet, or market note"}
                     </div>
                     <div className={styles.dropzoneMeta}>
                       {uploadFile
@@ -449,7 +445,7 @@ export default function HomePage() {
                       {uploadPending ? "Analyzing..." : "Analyze document"}
                     </button>
                     <div className={styles.microcopy}>
-                      OpenAI extracts legal search angles, then both search systems run in parallel.
+                      OpenAI extracts buyer, program, and signal angles, then both search systems run in parallel.
                     </div>
                   </div>
                 </form>
@@ -461,7 +457,7 @@ export default function HomePage() {
               <div className={styles.resultsHeader}>
                 <div>
                   <div className={styles.label}>Search results</div>
-                  <h2>{resultState?.mode === "document" ? "Matter comparison view" : "Comparison view"}</h2>
+                  <h2>{resultState?.mode === "document" ? "Capability comparison view" : "Comparison view"}</h2>
                 </div>
                 {resultState && (
                   <div className={styles.summaryMeta}>
@@ -539,7 +535,7 @@ export default function HomePage() {
                   </div>
                   <div className={styles.documentMetaItem}>
                     <span>Angles generated</span>
-                    <strong>Precedent, opposing counsel, industry news</strong>
+                    <strong>Buyers, programs, signals</strong>
                   </div>
                 </div>
               )}
@@ -625,7 +621,7 @@ export default function HomePage() {
                 <div className={styles.configBody}>
                   <section className={styles.configSection}>
                     <div className={styles.sectionHeader}>
-                      <h3>Relevant legal sites</h3>
+                      <h3>Relevant space sites</h3>
                     </div>
                     <div className={styles.optionList}>
                       {DOMAIN_PRESETS.map((preset) => (
@@ -650,7 +646,7 @@ export default function HomePage() {
                     </div>
                     <textarea
                       className={styles.configTextarea}
-                      placeholder="law360.com, regulations.gov"
+                      placeholder="spacex.com, boeing.com"
                       value={customDomains}
                       onChange={(event) => setCustomDomains(event.target.value)}
                     />

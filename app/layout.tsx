@@ -16,8 +16,8 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Harvey Neural Search",
-  description: "Neural legal research workflows powered by live web search and OpenAI."
+  title: "SpaceMatch — Space Procurement Intelligence",
+  description: "Find buyers and programs for your space hardware."
 };
 
 export default function RootLayout({

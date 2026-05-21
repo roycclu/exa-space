@@ -7,19 +7,19 @@ export const dynamic = "force-dynamic";
 
 const EXA_SEARCH_URL = "https://api.exa.ai/search";
 const INTELLIGENCE_SYSTEM_PROMPT =
-  "Return results that directly mention or profile the specific person, firm, or entity named in the query. Prioritize results where the named entity is the primary subject, not just a passing reference.";
+  "You are a space procurement intelligence analyst. Given a search result and a seller's capability description, write one sentence explaining why this result is a relevant procurement opportunity. Be specific. Under 25 words.";
 const JUDGE_INCLUDE_DOMAINS = [
-  "courtlistener.org",
-  "law360.com",
-  "reuters.com",
-  "jurist.org",
-  "scotusblog.com"
+  "spacenews.com",
+  "nasa.gov",
+  "esa.int",
+  "spacex.com",
+  "rocketlabusa.com"
 ];
 const COUNSEL_INCLUDE_DOMAINS = [
-  "law360.com",
-  "reuters.com",
-  "courtlistener.org",
-  "bloomberg.com"
+  "spacenews.com",
+  "space.com",
+  "techcrunch.com",
+  "defensenews.com"
 ];
 
 export type TabId = "judge" | "counsel" | "entity";
@@ -49,18 +49,14 @@ function getExaApiKey(): string {
   return key;
 }
 
-function maxAgeToIso(maxAgeHours: number): string {
-  return new Date(Date.now() - maxAgeHours * 60 * 60 * 1000).toISOString();
-}
-
 function buildQuery(tab: TabId, judgeName: string, firmName: string, entityName: string): string {
   if (tab === "judge") {
-    return `${judgeName} judge rulings decisions Northern District California`;
+    return `"${judgeName}" satellite program procurement buyer space company`;
   }
   if (tab === "counsel") {
-    return `${firmName} patent infringement cases outcomes wins losses 2023-2025`;
+    return `space program announcement mission launch "${firmName}" 2025 2026`;
   }
-  return `${entityName} regulatory investigations antitrust patent disputes 2025`;
+  return `"${entityName}" space startup hiring partnership contract announcement`;
 }
 
 function buildExaRequest(tab: TabId, query: string): Record<string, unknown> {
@@ -69,7 +65,7 @@ function buildExaRequest(tab: TabId, query: string): Record<string, unknown> {
   if (tab === "judge") {
     return {
       query,
-      type: "auto",
+      type: "neural",
       numResults: 8,
       includeDomains: JUDGE_INCLUDE_DOMAINS,
       systemPrompt: INTELLIGENCE_SYSTEM_PROMPT,
@@ -80,10 +76,10 @@ function buildExaRequest(tab: TabId, query: string): Record<string, unknown> {
   if (tab === "counsel") {
     return {
       query,
-      type: "auto",
+      type: "neural",
       category: "news",
       numResults: 8,
-      startPublishedDate: maxAgeToIso(168),
+      startPublishedDate: "2025-01-01",
       includeDomains: COUNSEL_INCLUDE_DOMAINS,
       systemPrompt: INTELLIGENCE_SYSTEM_PROMPT,
       contents: { highlights }
@@ -93,10 +89,10 @@ function buildExaRequest(tab: TabId, query: string): Record<string, unknown> {
   // entity
   return {
     query,
-    type: "auto",
+    type: "neural",
     category: "news",
     numResults: 10,
-    startPublishedDate: maxAgeToIso(72),
+    startPublishedDate: "2024-01-01",
     systemPrompt: INTELLIGENCE_SYSTEM_PROMPT,
     contents: { highlights }
   };
@@ -132,9 +128,12 @@ export async function POST(req: Request) {
       throw new ApiError("Invalid or missing tab parameter.", 400);
     }
 
-    const judgeName = body.judgeName?.trim() || "Hon. Lucy Koh";
-    const firmName = body.firmName?.trim() || "Quinn Emanuel";
-    const entityName = body.entityName?.trim() || "Apple Inc.";
+    const judgeName =
+      body.judgeName?.trim() || "radiation-hardened microprocessors for small satellites";
+    const firmName =
+      body.firmName?.trim() || "radiation-hardened microprocessors for small satellites";
+    const entityName =
+      body.entityName?.trim() || "radiation-hardened microprocessors for small satellites";
 
     const query =
       body.query?.trim() || buildQuery(tab, judgeName, firmName, entityName);

@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     const includeDomains = (body.includeDomains ?? []).filter(Boolean);
 
     if (!query) {
-      throw new ApiError("Enter a search query before running manual search.", 400);
+      throw new ApiError("Enter a capability query before running search.", 400);
     }
 
     const [exaResults, googleResults] = await Promise.all([

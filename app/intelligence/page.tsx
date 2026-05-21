@@ -31,81 +31,81 @@ type TabState = {
 };
 
 const INTELLIGENCE_SYSTEM_PROMPT =
-  "Return results that directly mention or profile the specific person, firm, or entity named in the query. Prioritize results where the named entity is the primary subject, not just a passing reference.";
+  "You are a space procurement intelligence analyst. Given a search result and a seller's capability description, write one sentence explaining why this result is a relevant procurement opportunity. Be specific. Under 25 words.";
 const JUDGE_INCLUDE_DOMAINS = [
-  "courtlistener.org",
-  "law360.com",
-  "reuters.com",
-  "jurist.org",
-  "scotusblog.com"
+  "spacenews.com",
+  "nasa.gov",
+  "esa.int",
+  "spacex.com",
+  "rocketlabusa.com"
 ];
 const COUNSEL_INCLUDE_DOMAINS = [
-  "law360.com",
-  "reuters.com",
-  "courtlistener.org",
-  "bloomberg.com"
+  "spacenews.com",
+  "space.com",
+  "techcrunch.com",
+  "defensenews.com"
 ];
 
 // ─── Tab configuration ───────────────────────────────────────────────────────
 
 const TAB_CONFIG = {
   judge: {
-    label: "Judge Profile",
-    description: "Behavioral pattern research",
+    label: "Buyers",
+    description: "Potential buying organizations",
     buildQuery: (judgeName: string) =>
-      `${judgeName} judge rulings decisions Northern District California`,
+      `"${judgeName}" satellite program procurement buyer space company`,
     previewParams: {
-      type: "auto",
+      type: "neural",
       numResults: 8,
       highlights: true,
       includeDomains: JUDGE_INCLUDE_DOMAINS,
       systemPrompt: INTELLIGENCE_SYSTEM_PROMPT
     },
     westlawNote:
-      "Westlaw does not index real-time judge behavior patterns. Coverage limited to indexed case law only.",
+      "Legacy research systems do not index live buyer intent across the commercial and government space ecosystem.",
     rationale:
-      "Behavioral pattern research. Westlaw surfaces case outcomes — not judicial decision-making tendencies, motion grant rates, or summary judgment disposition patterns for a specific judge."
+      "Buyer discovery. Live web search surfaces companies publishing procurement, subsystem, and integration signals tied to this capability."
   },
   counsel: {
-    label: "Opposing Counsel",
-    description: "Real-time firm intelligence",
+    label: "Programs",
+    description: "Mission and launch demand signals",
     buildQuery: (firmName: string) =>
-      `${firmName} patent infringement cases outcomes wins losses 2023-2025`,
+      `space program announcement mission launch "${firmName}" 2025 2026`,
     previewParams: {
-      type: "fast",
+      type: "neural",
       category: "news",
       numResults: 8,
-      maxAgeHours: 168,
+      startPublishedDate: "2025-01-01",
       highlights: true,
       includeDomains: COUNSEL_INCLUDE_DOMAINS,
       systemPrompt: INTELLIGENCE_SYSTEM_PROMPT
     },
     westlawNote:
-      "Westlaw does not index real-time firm intelligence. Coverage limited to indexed case law only.",
+      "Legacy research systems do not surface fresh launch and mission announcements as structured procurement signals.",
     rationale:
-      "Real-time firm intelligence. maxAgeHours: 168 (7 days) surfaces recent settlements, verdicts, and press coverage of opposing counsel — not available in Westlaw's indexed database."
+      "Program tracking. Fresh announcements expose launch timelines, hardware builds, and contract activity relevant to supplier outreach."
   },
   entity: {
-    label: "Entity Intelligence",
-    description: "Live entity monitoring",
+    label: "Signals",
+    description: "Hiring, partnership, and contract activity",
     buildQuery: (entityName: string) =>
-      `${entityName} regulatory investigations antitrust patent disputes 2025`,
+      `"${entityName}" space startup hiring partnership contract announcement`,
     previewParams: {
-      type: "auto",
+      type: "neural",
       category: "news",
       numResults: 10,
-      maxAgeHours: 72,
+      startPublishedDate: "2024-01-01",
       highlights: true,
       systemPrompt: INTELLIGENCE_SYSTEM_PROMPT
     },
     westlawNote:
-      "Westlaw does not index real-time entity news. Coverage limited to indexed case law only.",
+      "Legacy research systems do not monitor hiring, funding, partnership, and startup momentum across the live space market.",
     rationale:
-      "Live entity monitoring. maxAgeHours: 72 forces 72-hour freshness on regulatory filings, SEC actions, and DOJ activity — critical intelligence Westlaw cannot deliver in real time."
+      "Signals monitoring. Emerging announcements often reveal buyer intent before a formal procurement notice appears."
   }
 } as const;
 
-const TABS: TabId[] = ["entity", "counsel", "judge"];
+const TABS: TabId[] = ["judge", "counsel", "entity"];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -172,13 +172,13 @@ function makeTabState(): TabState {
 
 export default function IntelligencePage() {
   const [activeTab, setActiveTab] = useState<TabId>("judge");
-  const [judgeName, setJudgeName] = useState("Hon. Lucy Koh");
-  const [firmName, setFirmName] = useState("Quinn Emanuel");
-  const [entityName, setEntityName] = useState("Apple Inc.");
+  const [judgeName, setJudgeName] = useState("radiation-hardened microprocessors for small satellites");
+  const [firmName, setFirmName] = useState("radiation-hardened microprocessors for small satellites");
+  const [entityName, setEntityName] = useState("radiation-hardened microprocessors for small satellites");
   const [tabQueries, setTabQueries] = useState<Record<TabId, string>>({
-    judge: TAB_CONFIG.judge.buildQuery("Hon. Lucy Koh"),
-    counsel: TAB_CONFIG.counsel.buildQuery("Quinn Emanuel"),
-    entity: TAB_CONFIG.entity.buildQuery("Apple Inc.")
+    judge: TAB_CONFIG.judge.buildQuery("radiation-hardened microprocessors for small satellites"),
+    counsel: TAB_CONFIG.counsel.buildQuery("radiation-hardened microprocessors for small satellites"),
+    entity: TAB_CONFIG.entity.buildQuery("radiation-hardened microprocessors for small satellites")
   });
   const [showRawResponse, setShowRawResponse] = useState(false);
 
@@ -254,18 +254,9 @@ export default function IntelligencePage() {
       let nextResults = data.results ?? [];
       let note: string | null = null;
 
-      if (activeTab === "judge") {
-        const filtered = nextResults.filter((result) => {
-          const haystack = `${result.title} ${result.snippet}`.toLowerCase();
-          return haystack.includes("koh");
-        });
-
-        if (filtered.length >= 2) {
-          nextResults = filtered;
-        } else {
-          nextResults = nextResults.slice(0, 3);
-          note = "Showing most relevant results.";
-        }
+      if (activeTab === "judge" && nextResults.length > 3) {
+        nextResults = nextResults.slice(0, 3);
+        note = "Showing the most relevant buyer signals first.";
       }
 
       setTabStates((prev) => ({
@@ -325,30 +316,30 @@ export default function IntelligencePage() {
       <header className={styles.siteHeader}>
         <div className={styles.headerInner}>
           <div className={styles.brandRow}>
-            <span className={styles.brandName}>Harvey</span>
+            <span className={styles.brandName}>SpaceMatch</span>
             <span className={styles.brandSep}>|</span>
-            <span className={styles.brandProduct}>Legal Intelligence</span>
+            <span className={styles.brandProduct}>Space Procurement Intelligence</span>
           </div>
           <div className={styles.headerRight}>
             <Link href="/" className={styles.navLink}>
-              Neural Search →
+              Capability Search →
             </Link>
-            <span className={styles.poweredBy}>Live web research</span>
+            <span className={styles.poweredBy}>Find buyers and programs for your space hardware</span>
           </div>
         </div>
         <div className={styles.goldRule} />
       </header>
 
-      {/* ── Active matter banner ── */}
+      {/* ── Active capability banner ── */}
       <div className={styles.matterBanner}>
         <div className={styles.matterInner}>
           <div className={styles.matterLeft}>
-            <div className={styles.matterLabel}>Active Matter</div>
-            <div className={styles.matterTitle}>Apple Inc. v. Doe — Patent Infringement</div>
+            <div className={styles.matterLabel}>Active Capability</div>
+            <div className={styles.matterTitle}>SpaceMatch — Space Procurement Intelligence</div>
           </div>
           <div className={styles.matterFields}>
             <label className={styles.matterField}>
-              <span className={styles.matterFieldLabel}>Judge</span>
+              <span className={styles.matterFieldLabel}>What do you sell?</span>
               <input
                 className={styles.matterInput}
                 value={judgeName}
@@ -356,11 +347,11 @@ export default function IntelligencePage() {
                   setJudgeName(e.target.value);
                   syncQuery("judge", e.target.value);
                 }}
-                placeholder="Judge name"
+                placeholder="e.g. radiation-hardened microprocessors for small satellites"
               />
             </label>
             <label className={styles.matterField}>
-              <span className={styles.matterFieldLabel}>Opposing Counsel</span>
+              <span className={styles.matterFieldLabel}>Capability Mirror</span>
               <input
                 className={styles.matterInput}
                 value={firmName}
@@ -368,11 +359,11 @@ export default function IntelligencePage() {
                   setFirmName(e.target.value);
                   syncQuery("counsel", e.target.value);
                 }}
-                placeholder="Firm name"
+                placeholder="Capability description"
               />
             </label>
             <label className={styles.matterField}>
-              <span className={styles.matterFieldLabel}>Entity</span>
+              <span className={styles.matterFieldLabel}>Capability Mirror</span>
               <input
                 className={styles.matterInput}
                 value={entityName}
@@ -380,7 +371,7 @@ export default function IntelligencePage() {
                   setEntityName(e.target.value);
                   syncQuery("entity", e.target.value);
                 }}
-                placeholder="Entity name"
+                placeholder="Capability description"
               />
             </label>
           </div>
@@ -455,7 +446,7 @@ export default function IntelligencePage() {
         <div className={styles.resultsPanel}>
           <div className={styles.resultsPanelHeader}>
             <div className={styles.resultsPanelTitle}>
-              {isWestlaw ? "Westlaw Coverage" : "Live Search Results"}
+              {isWestlaw ? "Legacy Coverage" : "Live Search Results"}
               {ts.results !== null && !isWestlaw && !ts.pending && (
                 <span className={styles.resultCount}>{ts.results.length} results</span>
               )}
@@ -465,23 +456,23 @@ export default function IntelligencePage() {
               onClick={toggleWestlaw}
               type="button"
             >
-              {isWestlaw ? "← Back to Search" : "vs Westlaw"}
+              {isWestlaw ? "← Back to Search" : "vs Legacy"}
             </button>
           </div>
 
           <div className={styles.resultsPanelBody}>
-            {/* ── Westlaw comparison pane ── */}
+            {/* ── Legacy comparison pane ── */}
             {isWestlaw && (
               <div className={styles.westlawPane}>
-                <div className={styles.westlawGlyph}>⚖</div>
+                <div className={styles.westlawGlyph}>◌</div>
                 <div className={styles.westlawCoverageLabel}>Coverage Analysis</div>
                 <h2 className={styles.westlawHeading}>Coverage Gap</h2>
                 <div className={styles.westlawDivider} />
                 <p className={styles.westlawMessage}>{cfg.westlawNote}</p>
                 <p className={styles.westlawSub}>
-                  Traditional legal research platforms index curated case law and statutory
-                  databases. They cannot access the live web intelligence retrieved
-                  in real time for this class of signal.
+                  Static supplier databases and generic procurement tools miss the live web
+                  announcements, hiring trends, and partnership activity retrieved in real time
+                  for this class of signal.
                 </p>
                 <div className={styles.westlawExaNote}>
                   This intelligence is retrieved live from the open web
@@ -534,7 +525,7 @@ export default function IntelligencePage() {
                   {ts.results.length === 0 ? (
                     <div className={styles.emptyPane}>
                       <p className={styles.emptyText}>
-                        No results returned for this query. Try adjusting the matter context
+                        No results returned for this query. Try adjusting the capability context
                         and re-running.
                       </p>
                     </div>

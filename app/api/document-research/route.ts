@@ -36,7 +36,7 @@ export async function POST(request: Request) {
     const includeDomains = parseIncludeDomains(formData.get("includeDomains"));
 
     if (!(file instanceof File)) {
-      throw new ApiError("Upload a contract, case summary, or supporting document first.", 400);
+      throw new ApiError("Upload a capability brief, product sheet, or supporting document first.", 400);
     }
 
     const documentText = await extractDocumentText(file);

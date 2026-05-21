@@ -44,11 +44,11 @@ function extractOutputText(payload: unknown) {
 
 export async function extractSearchAngles(documentText: string): Promise<SearchAngles> {
   const instructions = [
-    "You are helping a legal research analyst turn an uploaded document into search strategies.",
+    "You are helping a space procurement analyst turn an uploaded capability brief into search strategies.",
     "Return valid JSON only with three string fields:",
-    '"precedent": search angle for relevant precedents, cases, statutes, or legal analysis.',
-    '"opposingCounsel": search angle for opposing counsel history, litigation posture, firms, and prior matters.',
-    '"industryNews": search angle for industry, market, and company news relevant to the dispute or contract.',
+    '"precedent": buyer search angle for companies that would purchase or integrate the capability.',
+    '"opposingCounsel": program search angle for launches, missions, contracts, and program announcements relevant to the capability.',
+    '"industryNews": signals search angle for startup hiring, partnership, contract, funding, and announcement activity around the capability.',
     "Each value must be a concise natural language neural search query.",
     "Do not include markdown, commentary, or extra keys."
   ].join("\n");
