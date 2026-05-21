@@ -249,6 +249,176 @@
   overflow: hidden;
 }
 
+.icpContent {
+  padding: 32px 36px 56px;
+  display: grid;
+  gap: 36px;
+}
+
+.icpSection {
+  display: grid;
+  gap: 18px;
+}
+
+.icpSectionHeading {
+  display: grid;
+  gap: 8px;
+}
+
+.icpSectionHeading h2,
+.icpCardBody h3 {
+  margin: 0;
+  font-family: var(--font-display);
+}
+
+.icpSectionHeading h2 {
+  font-size: 1.8rem;
+  line-height: 1.08;
+}
+
+.icpPanel {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface-1);
+}
+
+.icpTableWrap {
+  overflow-x: auto;
+}
+
+.icpTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 980px;
+}
+
+.icpTable th,
+.icpTable td {
+  padding: 18px 20px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.icpTable th {
+  color: var(--muted);
+  font-size: 0.73rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.icpTable tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.icpTable td:first-child {
+  min-width: 220px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.icpStatusPill {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.icpCardGrid,
+.icpWorkflowGrid,
+.icpSignalGrid {
+  display: grid;
+  gap: 18px;
+}
+
+.icpCardGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.icpWorkflowGrid,
+.icpSignalGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.icpCardBody {
+  padding: 22px;
+}
+
+.icpCardBody h3 {
+  font-size: 1.26rem;
+  margin-bottom: 14px;
+}
+
+.icpBulletList {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  display: grid;
+  gap: 10px;
+  line-height: 1.6;
+}
+
+.icpWorkflowStack {
+  display: grid;
+  gap: 12px;
+}
+
+.icpWorkflowBox {
+  display: grid;
+  gap: 6px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface-2);
+}
+
+.icpWorkflowIndex {
+  color: var(--muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.icpWorkflowArrow {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 10px 0 2px;
+}
+
+.icpWorkflowArrowIcon {
+  color: var(--accent);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.icpWorkflowArrowLabel {
+  color: var(--accent-strong);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.icpCallout {
+  padding: 18px 20px;
+  border: 1px solid var(--border-accent);
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--accent-dim) 0%, rgba(17, 17, 17, 0.96) 100%);
+  color: var(--text);
+  line-height: 1.7;
+}
+
 /* ─── INSPECTOR (LEFT PANEL) ─── */
 
 .inspector {
@@ -862,6 +1032,16 @@
     grid-template-columns: 1fr;
     overflow: visible;
     height: auto;
+  }
+
+  .icpContent {
+    padding: 24px 16px 40px;
+  }
+
+  .icpCardGrid,
+  .icpWorkflowGrid,
+  .icpSignalGrid {
+    grid-template-columns: 1fr;
   }
 
   .inspector,

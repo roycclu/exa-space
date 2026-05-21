@@ -7,7 +7,7 @@ import styles from "./page.module.css";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type TabId = "judge" | "counsel" | "entity";
+type TabId = "judge" | "counsel" | "entity" | "icp";
 
 type IntelligenceResult = {
   id: string;
@@ -46,6 +46,102 @@ const COUNSEL_INCLUDE_DOMAINS = [
   "techcrunch.com",
   "defensenews.com"
 ];
+
+const ICP_ROWS = [
+  {
+    icp: "Scientific Researcher",
+    opportunity: "Neural search finds conceptually related papers across disciplines",
+    rejectionReason:
+      "Status quo moat: lead researchers rely on established networks and journal subscriptions. Switching cost is low but habit is strong.",
+    status: "Deprioritized",
+    statusTone: "negative"
+  },
+  {
+    icp: "Pharma Clinical Trial Coordinator",
+    opportunity: "Find trial-eligible patients and research sites via open web signals",
+    rejectionReason:
+      "Patient privacy constraints are fundamental. Open web indexing cannot access the clinical data that matters most. Hard to demonstrate value before hitting the wall.",
+    status: "Deprioritized",
+    statusTone: "negative"
+  },
+  {
+    icp: "Space Industry — Seller & Procurement",
+    opportunity:
+      "New buyers and sellers lack legacy procurement relationships. Fast-growing, fragmented market where information asymmetry is the core problem.",
+    rejectionReason:
+      "No fatal objection — competition exists but is not well-differentiated.",
+    status: "Selected",
+    statusTone: "positive"
+  }
+] as const;
+
+const MARKET_CARDS = [
+  {
+    title: "Market Attractiveness",
+    items: [
+      "$626B global space economy, 80% commercial",
+      "Growing at 7-9% CAGR toward $2T by 2040",
+      "490+ funded startups, new entrants weekly",
+      "New buyers and sellers entering without legacy procurement relationships",
+      "Space Force awarding 20 new commercial contracts in 2026 alone"
+    ]
+  },
+  {
+    title: "Competitive Landscape",
+    items: [
+      "SpaceNexus: directory and marketplace, not intelligence",
+      "SAM.gov: government prime contracts only, keyword search",
+      "GovWin/GovDash: government-focused, expensive, no commercial layer",
+      "Gap: nobody tracks commercial signals — program announcements, funding rounds, job postings, technical blogs — as procurement intelligence"
+    ]
+  },
+  {
+    title: "Feasibility for Exa",
+    items: [
+      "GTM enrichment is a core Exa use case",
+      "Neural search infers buyer intent from capability descriptions, not just keywords",
+      "Websets enable ongoing monitoring of new program announcements",
+      "Contents API extracts structured intelligence from unstructured web pages",
+      "No specialized data access required — all signals are on the open web"
+    ]
+  }
+] as const;
+
+const SELLER_JOURNEY = [
+  "Identify target programs and primes",
+  "Track program announcements and funding signals",
+  "Qualify opportunity (budget, timeline, fit)",
+  "Prioritize outreach",
+  "Engage procurement team"
+] as const;
+
+const BUYER_JOURNEY = [
+  "Define technical requirements",
+  "Search for qualified suppliers",
+  "Evaluate capabilities and track record",
+  "Request for information / proposal",
+  "Award contract"
+] as const;
+
+const BUYER_SIGNALS = [
+  "Technical blog posts describing new component capabilities",
+  "GitHub repos showing working prototypes",
+  "Conference presentation abstracts",
+  "Funding announcements (Series A/B signals scaling production)",
+  "Job postings (hiring propulsion engineers = building something)",
+  "Patent filings",
+  "Partnership announcements with primes"
+] as const;
+
+const SELLER_SIGNALS = [
+  "Program launch date announcements",
+  "New satellite constellation plans",
+  "Mission architecture documents",
+  "RFI notices — pre-RFP signals",
+  "Budget allocation announcements from agencies",
+  "New program office formations",
+  "Prime contractor teaming announcements"
+] as const;
 
 // ─── Tab configuration ───────────────────────────────────────────────────────
 
@@ -103,10 +199,18 @@ const TAB_CONFIG = {
       "Legacy research systems do not monitor hiring, funding, partnership, and startup momentum across the live space market.",
     rationale:
       "Signals monitoring. Emerging announcements often reveal buyer intent before a formal procurement notice appears."
+  },
+  icp: {
+    label: "ICP Research",
+    description: "Market and workflow assessment",
+    buildQuery: () => "ICP research",
+    previewParams: {},
+    westlawNote: "",
+    rationale: ""
   }
 } as const;
 
-const TABS: TabId[] = ["judge", "counsel", "entity"];
+const TABS: TabId[] = ["judge", "counsel", "entity", "icp"];
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
@@ -169,6 +273,44 @@ function makeTabState(): TabState {
   };
 }
 
+function WorkflowColumn({
+  title,
+  steps,
+  highlightAfter
+}: {
+  title: string;
+  steps: readonly string[];
+  highlightAfter: number;
+}) {
+  return (
+    <article className={styles.icpPanel}>
+      <div className={styles.icpCardBody}>
+        <h3>{title}</h3>
+        <div className={styles.icpWorkflowStack}>
+          {steps.map((step, index) => (
+            <div key={step}>
+              <div className={styles.icpWorkflowBox}>
+                <span className={styles.icpWorkflowIndex}>Step {index + 1}</span>
+                <span>{step}</span>
+              </div>
+              {index === highlightAfter && index < steps.length - 1 ? (
+                <div className={styles.icpWorkflowArrow}>
+                  <span className={styles.icpWorkflowArrowIcon}>↓</span>
+                  <span className={styles.icpWorkflowArrowLabel}>Exa targets here</span>
+                </div>
+              ) : index < steps.length - 1 ? (
+                <div className={styles.icpWorkflowArrow}>
+                  <span className={styles.icpWorkflowArrowIcon}>↓</span>
+                </div>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+}
+
 // ─── Page component ──────────────────────────────────────────────────────────
 
 export default function IntelligencePage() {
@@ -179,20 +321,23 @@ export default function IntelligencePage() {
   const [tabQueries, setTabQueries] = useState<Record<TabId, string>>({
     judge: TAB_CONFIG.judge.buildQuery("radiation-hardened microprocessors for small satellites"),
     counsel: TAB_CONFIG.counsel.buildQuery("radiation-hardened microprocessors for small satellites"),
-    entity: TAB_CONFIG.entity.buildQuery("radiation-hardened microprocessors for small satellites")
+    entity: TAB_CONFIG.entity.buildQuery("radiation-hardened microprocessors for small satellites"),
+    icp: TAB_CONFIG.icp.buildQuery()
   });
   const [showRawResponse, setShowRawResponse] = useState(false);
 
   const [westlawMode, setWestlawMode] = useState<Record<TabId, boolean>>({
     judge: false,
     counsel: false,
-    entity: false
+    entity: false,
+    icp: false
   });
 
   const [tabStates, setTabStates] = useState<Record<TabId, TabState>>({
     judge: makeTabState(),
     counsel: makeTabState(),
-    entity: makeTabState()
+    entity: makeTabState(),
+    icp: makeTabState()
   });
 
   const cfg = TAB_CONFIG[activeTab];
@@ -201,7 +346,7 @@ export default function IntelligencePage() {
   const liveQuery = tabQueries[activeTab];
 
   const previewPayload = useMemo(
-    () => buildPreviewPayload(activeTab, liveQuery),
+    () => (activeTab === "icp" ? {} : buildPreviewPayload(activeTab, liveQuery)),
     [activeTab, liveQuery]
   );
 
@@ -209,6 +354,9 @@ export default function IntelligencePage() {
   const inspectorPayload = ts.executedRequest ?? previewPayload;
 
   async function runSearch() {
+    if (activeTab === "icp") {
+      return;
+    }
     setTabStates((prev) => ({
       ...prev,
       [activeTab]: { ...prev[activeTab], pending: true, error: null, note: null }
@@ -400,7 +548,112 @@ export default function IntelligencePage() {
         })}
       </div>
 
-      {/* ── Main workspace ── */}
+      {activeTab === "icp" ? (
+        <div className={styles.icpContent}>
+          <section className={styles.icpSection}>
+            <div className={styles.icpSectionHeading}>
+              <span className={styles.sectionLabel}>Section 1</span>
+              <h2>ICP Selection</h2>
+            </div>
+            <div className={styles.icpPanel}>
+              <div className={styles.icpTableWrap}>
+                <table className={styles.icpTable}>
+                  <thead>
+                    <tr>
+                      <th>ICP</th>
+                      <th>Opportunity</th>
+                      <th>Rejection Reason</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {ICP_ROWS.map((row) => (
+                      <tr key={row.icp}>
+                        <td>{row.icp}</td>
+                        <td>{row.opportunity}</td>
+                        <td>{row.rejectionReason}</td>
+                        <td>
+                          <span className={`${styles.icpStatusPill} ${styles[row.statusTone]}`}>
+                            {row.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section className={styles.icpSection}>
+            <div className={styles.icpSectionHeading}>
+              <span className={styles.sectionLabel}>Section 2</span>
+              <h2>Market Assessment</h2>
+            </div>
+            <div className={styles.icpCardGrid}>
+              {MARKET_CARDS.map((card) => (
+                <article key={card.title} className={styles.icpPanel}>
+                  <div className={styles.icpCardBody}>
+                    <h3>{card.title}</h3>
+                    <ul className={styles.icpBulletList}>
+                      {card.items.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className={styles.icpSection}>
+            <div className={styles.icpSectionHeading}>
+              <span className={styles.sectionLabel}>Section 3</span>
+              <h2>Workflow Diagrams</h2>
+            </div>
+            <div className={styles.icpWorkflowGrid}>
+              <WorkflowColumn title="Seller Journey" steps={SELLER_JOURNEY} highlightAfter={0} />
+              <WorkflowColumn title="Buyer Journey" steps={BUYER_JOURNEY} highlightAfter={1} />
+            </div>
+          </section>
+
+          <section className={styles.icpSection}>
+            <div className={styles.icpSectionHeading}>
+              <span className={styles.sectionLabel}>Section 4</span>
+              <h2>What signals matter beyond formal RFPs?</h2>
+            </div>
+            <div className={styles.icpSignalGrid}>
+              <article className={styles.icpPanel}>
+                <div className={styles.icpCardBody}>
+                  <h3>Signals that help Buyers find the right Seller</h3>
+                  <ul className={styles.icpBulletList}>
+                    {BUYER_SIGNALS.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+
+              <article className={styles.icpPanel}>
+                <div className={styles.icpCardBody}>
+                  <h3>Signals that help Sellers find the right Buyer</h3>
+                  <ul className={styles.icpBulletList}>
+                    {SELLER_SIGNALS.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </article>
+            </div>
+
+            <div className={styles.icpCallout}>
+              Exa&apos;s neural search finds these signals by meaning, not keyword. A seller
+              describing radiation-hardened microprocessors can find buyers discussing avionics,
+              onboard compute, or radiation-tolerant architectures without exact phrase matches.
+            </div>
+          </section>
+        </div>
+      ) : (
       <div className={styles.workspace}>
         {/* Left: API Inspector */}
         <div className={styles.inspector}>
@@ -613,6 +866,7 @@ export default function IntelligencePage() {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }
