@@ -20,12 +20,13 @@
   position: sticky;
   top: 0;
   z-index: 10;
+  border-bottom: 1px solid var(--border);
 }
 
 .headerInner {
   max-width: 1540px;
   margin: 0 auto;
-  padding: 18px 28px;
+  padding: 22px 36px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -40,11 +41,11 @@
 
 .brandName {
   font-family: var(--font-display);
-  font-size: 1.45rem;
+  font-size: 2rem;
   font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent);
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--text);
   line-height: 1;
 }
 
@@ -56,25 +57,39 @@
 
 .brandProduct {
   font-family: var(--font-sans);
-  font-size: 0.95rem;
-  font-weight: 300;
-  color: var(--text);
+  font-size: 0.98rem;
+  font-weight: 400;
+  color: var(--muted);
   letter-spacing: 0.04em;
 }
 
 .poweredBy {
-  font-size: 0.7rem;
-  color: var(--muted-dim);
+  font-size: 0.78rem;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+.headerLink {
+  font-size: 0.74rem;
+  font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.headerLink:hover {
+  color: var(--text);
 }
 
 .goldRule {
   height: 1px;
   background: linear-gradient(
     90deg,
-    var(--accent) 0%,
-    rgba(201, 168, 76, 0.35) 45%,
+    rgba(0, 102, 255, 0.95) 0%,
+    rgba(0, 102, 255, 0.2) 45%,
     transparent 100%
   );
 }
@@ -83,7 +98,7 @@
 
 .content {
   flex: 1;
-  padding: 24px 28px 52px;
+  padding: 36px 36px 64px;
 }
 
 /* ─── 3-COLUMN GRID ─── */
@@ -91,14 +106,15 @@
 .grid {
   display: grid;
   grid-template-columns: minmax(300px, 360px) minmax(0, 1fr) minmax(90px, 296px);
-  gap: 18px;
+  gap: 24px;
   align-items: start;
 }
 
 .panel {
   border: 1px solid var(--border);
-  border-radius: 5px;
+  border-radius: 14px;
   background: var(--surface-1);
+  box-shadow: none;
 }
 
 .workspace,
@@ -119,6 +135,7 @@
 .modeToggle {
   display: flex;
   border-bottom: 1px solid var(--border);
+  background: var(--surface-1);
 }
 
 .modeButton {
@@ -146,7 +163,7 @@
   flex: 1;
   padding: 13px 10px;
   background: transparent;
-  color: var(--accent);
+  color: var(--text);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -160,8 +177,8 @@
 
 .searchForm {
   display: grid;
-  gap: 16px;
-  padding: 18px;
+  gap: 20px;
+  padding: 24px;
 }
 
 .sectionHeader {
@@ -174,8 +191,8 @@
 .sectionHeader h2 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 0.98rem;
-  font-weight: 400;
+  font-size: 1.08rem;
+  font-weight: 700;
   letter-spacing: 0.01em;
   color: var(--text);
 }
@@ -193,10 +210,10 @@
 .configTextarea {
   width: 100%;
   border: 1px solid var(--border);
-  border-radius: 4px;
+  border-radius: 10px;
   background: var(--surface-2);
   color: var(--text);
-  padding: 13px 15px;
+  padding: 15px 16px;
   font-family: var(--font-sans);
   font-size: 0.86rem;
   line-height: 1.6;
@@ -206,7 +223,8 @@
 .queryInput:focus,
 .configTextarea:focus {
   outline: none;
-  border-color: rgba(201, 168, 76, 0.45);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.18);
 }
 
 .queryInput::placeholder,
@@ -229,7 +247,7 @@
   gap: 6px;
   padding: 24px 18px;
   border: 1px dashed rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+  border-radius: 12px;
   background: var(--surface-2);
   cursor: pointer;
   transition: border-color 160ms ease, background 160ms ease;
@@ -237,7 +255,7 @@
 }
 
 .dropzone:hover {
-  border-color: rgba(201, 168, 76, 0.38);
+  border-color: rgba(0, 168, 255, 0.38);
 }
 
 .dropzoneActive {
@@ -267,11 +285,11 @@
 
 .primaryButton {
   min-height: 42px;
-  padding: 0 20px;
+  padding: 0 22px;
   background: var(--accent);
-  color: #080808;
+  color: #ffffff;
   border: 0;
-  border-radius: 3px;
+  border-radius: 10px;
   font-family: var(--font-sans);
   font-size: 0.74rem;
   font-weight: 700;
@@ -282,7 +300,7 @@
 }
 
 .primaryButton:hover:not(:disabled) {
-  background: var(--accent-strong);
+  background: #0b72ff;
 }
 
 .primaryButton:disabled {
@@ -296,7 +314,7 @@
   background: transparent;
   color: var(--muted);
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-radius: 10px;
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -306,8 +324,8 @@
 }
 
 .secondaryButton:hover {
-  border-color: rgba(255, 255, 255, 0.16);
-  color: var(--text);
+  border-color: var(--accent);
+  color: var(--accent-strong);
 }
 
 .microcopy {
@@ -329,15 +347,15 @@
   justify-content: space-between;
   gap: 14px;
   align-items: end;
-  padding: 18px 20px 14px;
+  padding: 24px 24px 18px;
   border-bottom: 1px solid var(--border);
 }
 
 .resultsHeader h2 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.05rem;
-  font-weight: 400;
+  font-size: 1.18rem;
+  font-weight: 700;
   letter-spacing: 0.01em;
 }
 
@@ -361,7 +379,7 @@
   gap: 14px;
   flex-wrap: wrap;
   align-items: center;
-  padding: 10px 20px;
+  padding: 14px 24px;
   border-bottom: 1px solid var(--border);
   background: var(--surface-2);
 }
@@ -384,11 +402,11 @@
 
 .chip {
   min-height: 27px;
-  padding: 0 10px;
+  padding: 0 2px 8px;
   background: transparent;
   color: var(--muted);
-  border: 1px solid var(--border);
-  border-radius: 2px;
+  border: 0;
+  border-bottom: 2px solid transparent;
   font-size: 0.72rem;
   font-weight: 500;
   letter-spacing: 0.04em;
@@ -397,17 +415,16 @@
 }
 
 .chip:hover {
-  border-color: rgba(255, 255, 255, 0.15);
   color: var(--text);
 }
 
 .chipActive {
   min-height: 27px;
-  padding: 0 10px;
-  background: var(--accent-dim);
-  color: var(--accent);
-  border: 1px solid var(--border-accent);
-  border-radius: 2px;
+  padding: 0 2px 8px;
+  background: transparent;
+  color: var(--text);
+  border: 0;
+  border-bottom: 2px solid var(--accent);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -417,7 +434,7 @@
 .error {
   margin: 16px 20px 0;
   padding: 13px 16px;
-  border-radius: 3px;
+  border-radius: 10px;
   background: var(--error-dim);
   border: 1px solid rgba(192, 80, 80, 0.22);
   color: #CC7070;
@@ -426,7 +443,7 @@
 }
 
 .emptyState {
-  padding: 52px 24px;
+  padding: 72px 24px;
   color: var(--muted);
   font-size: 0.86rem;
   line-height: 1.7;
@@ -462,8 +479,8 @@
   );
   background-size: 200% 100%;
   animation: shimmer 1.8s ease-in-out infinite;
-  border-radius: 0 3px 3px 0;
-  border-left: 3px solid rgba(201, 168, 76, 0.18);
+  border-radius: 12px;
+  border: 1px solid var(--border);
 }
 
 /* ─── DOCUMENT META ─── */
@@ -477,7 +494,7 @@
 .documentMetaItem {
   display: grid;
   gap: 4px;
-  padding: 13px 20px;
+  padding: 16px 24px;
   border-right: 1px solid var(--border);
 }
 
@@ -503,14 +520,14 @@
 
 .sections {
   display: grid;
-  padding: 20px;
-  gap: 20px;
+  padding: 28px 24px;
+  gap: 28px;
 }
 
 .sectionCard {
   display: grid;
-  gap: 16px;
-  padding-top: 20px;
+  gap: 18px;
+  padding-top: 24px;
   border-top: 1px solid var(--border);
 }
 
@@ -529,7 +546,7 @@
 .sectionTop h3 {
   margin: 0;
   font-family: var(--font-sans);
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 600;
   color: var(--text);
   letter-spacing: 0.01em;
@@ -548,7 +565,7 @@
 .providerGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 20px;
 }
 
 .providerColumn {
@@ -588,24 +605,25 @@
 
 .card {
   display: grid;
-  gap: 9px;
-  padding: 13px 15px;
+  gap: 10px;
+  padding: 18px;
   border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 3px 3px 0;
+  border-left: 1px solid var(--border);
+  border-radius: 14px;
   background: var(--surface-2);
-  transition: background 140ms ease, border-left-color 140ms ease;
+  transition: background 140ms ease, border-color 140ms ease, transform 140ms ease;
 }
 
 .card:hover {
   background: var(--surface-3);
-  border-left-color: var(--accent-strong);
+  border-color: rgba(0, 168, 255, 0.35);
+  transform: translateY(-1px);
 }
 
 .emptyCard {
   padding: 13px 15px;
   border: 1px solid var(--border);
-  border-radius: 3px;
+  border-radius: 12px;
   background: var(--surface-2);
   color: var(--muted);
   font-size: 0.8rem;
@@ -622,7 +640,7 @@
 }
 
 .card:hover .cardTitle {
-  color: var(--accent-strong);
+  color: var(--text);
 }
 
 .cardCitation {
@@ -658,8 +676,8 @@
   justify-content: space-between;
   gap: 12px;
   font-size: 0.72rem;
-  color: var(--muted-dim);
-  padding-top: 7px;
+  color: var(--accent-strong);
+  padding-top: 10px;
   border-top: 1px solid var(--border);
 }
 
@@ -681,15 +699,15 @@
   justify-content: space-between;
   gap: 10px;
   align-items: center;
-  padding: 15px 16px;
+  padding: 18px 18px;
   border-bottom: 1px solid var(--border);
 }
 
 .configHeader h2 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 0.88rem;
-  font-weight: 400;
+  font-size: 0.95rem;
+  font-weight: 700;
   color: var(--text);
 }
 
@@ -701,7 +719,7 @@
 .configSection {
   display: grid;
   gap: 11px;
-  padding: 15px 16px;
+  padding: 18px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -766,10 +784,14 @@
 .requestBlock {
   display: grid;
   gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--surface-2);
 }
 
 .requestLabel {
-  color: var(--accent);
+  color: var(--accent-strong);
   font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.1em;
@@ -780,8 +802,8 @@
   margin: 0;
   padding: 12px 14px;
   overflow-x: auto;
-  border-radius: 3px;
-  background: var(--surface-2);
+  border-radius: 10px;
+  background: #0a0a0a;
   border: 1px solid var(--border);
   color: var(--muted);
   font-size: 0.73rem;
@@ -790,6 +812,12 @@
 }
 
 /* ─── RESPONSIVE ─── */
+
+@media (max-width: 1280px) {
+  .grid {
+    grid-template-columns: minmax(280px, 340px) minmax(0, 1fr) minmax(80px, 280px);
+  }
+}
 
 @media (max-width: 1200px) {
   .grid {
@@ -800,6 +828,16 @@
   .results,
   .configPanel {
     position: static;
+  }
+}
+
+@media (max-width: 960px) {
+  .content {
+    padding: 24px 18px 48px;
+  }
+
+  .headerInner {
+    padding: 18px 18px;
   }
 }
 
